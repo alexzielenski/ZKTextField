@@ -1,0 +1,295 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FA225D2715360301004696D5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA225D2615360301004696D5 /* Cocoa.framework */; };
+		FA225D3115360301004696D5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FA225D2F15360301004696D5 /* InfoPlist.strings */; };
+		FA225D3315360301004696D5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FA225D3215360301004696D5 /* main.m */; };
+		FA225D3715360301004696D5 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FA225D3515360301004696D5 /* Credits.rtf */; };
+		FA225D3A15360301004696D5 /* ZKAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FA225D3915360301004696D5 /* ZKAppDelegate.m */; };
+		FA225D3D15360301004696D5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA225D3B15360301004696D5 /* MainMenu.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		FA225D2215360301004696D5 /* ZKTextField.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZKTextField.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA225D2615360301004696D5 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		FA225D2915360301004696D5 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		FA225D2A15360301004696D5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		FA225D2B15360301004696D5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FA225D2E15360301004696D5 /* ZKTextField-Info.plist */ = {isa = PBXFileReference; path = "ZKTextField-Info.plist"; sourceTree = "<group>"; };
+		FA225D3015360301004696D5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		FA225D3215360301004696D5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		FA225D3415360301004696D5 /* ZKTextField-Prefix.pch */ = {isa = PBXFileReference; path = "ZKTextField-Prefix.pch"; sourceTree = "<group>"; };
+		FA225D3615360301004696D5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		FA225D3815360301004696D5 /* ZKAppDelegate.h */ = {isa = PBXFileReference; path = ZKAppDelegate.h; sourceTree = "<group>"; };
+		FA225D3915360301004696D5 /* ZKAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZKAppDelegate.m; sourceTree = "<group>"; };
+		FA225D3C15360301004696D5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FA225D1F15360301004696D5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA225D2715360301004696D5 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FA225D1715360301004696D5 = {
+			isa = PBXGroup;
+			children = (
+				FA225D2C15360301004696D5 /* ZKTextField */,
+				FA225D2515360301004696D5 /* Frameworks */,
+				FA225D2315360301004696D5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FA225D2315360301004696D5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FA225D2215360301004696D5 /* ZKTextField.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FA225D2515360301004696D5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FA225D2615360301004696D5 /* Cocoa.framework */,
+				FA225D2815360301004696D5 /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FA225D2815360301004696D5 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FA225D2915360301004696D5 /* AppKit.framework */,
+				FA225D2A15360301004696D5 /* CoreData.framework */,
+				FA225D2B15360301004696D5 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		FA225D2C15360301004696D5 /* ZKTextField */ = {
+			isa = PBXGroup;
+			children = (
+				FA225D3815360301004696D5 /* ZKAppDelegate.h */,
+				FA225D3915360301004696D5 /* ZKAppDelegate.m */,
+				FA225D3B15360301004696D5 /* MainMenu.xib */,
+				FA225D2D15360301004696D5 /* Supporting Files */,
+			);
+			path = ZKTextField;
+			sourceTree = "<group>";
+		};
+		FA225D2D15360301004696D5 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FA225D2E15360301004696D5 /* ZKTextField-Info.plist */,
+				FA225D2F15360301004696D5 /* InfoPlist.strings */,
+				FA225D3215360301004696D5 /* main.m */,
+				FA225D3415360301004696D5 /* ZKTextField-Prefix.pch */,
+				FA225D3515360301004696D5 /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FA225D2115360301004696D5 /* ZKTextField */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FA225D4015360301004696D5 /* Build configuration list for PBXNativeTarget "ZKTextField" */;
+			buildPhases = (
+				FA225D1E15360301004696D5 /* Sources */,
+				FA225D1F15360301004696D5 /* Frameworks */,
+				FA225D2015360301004696D5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ZKTextField;
+			productName = ZKTextField;
+			productReference = FA225D2215360301004696D5 /* ZKTextField.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FA225D1915360301004696D5 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = ZK;
+				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = "Alex Zielenski";
+			};
+			buildConfigurationList = FA225D1C15360301004696D5 /* Build configuration list for PBXProject "ZKTextField" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = FA225D1715360301004696D5;
+			productRefGroup = FA225D2315360301004696D5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FA225D2115360301004696D5 /* ZKTextField */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FA225D2015360301004696D5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA225D3115360301004696D5 /* InfoPlist.strings in Resources */,
+				FA225D3715360301004696D5 /* Credits.rtf in Resources */,
+				FA225D3D15360301004696D5 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FA225D1E15360301004696D5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA225D3315360301004696D5 /* main.m in Sources */,
+				FA225D3A15360301004696D5 /* ZKAppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		FA225D2F15360301004696D5 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FA225D3015360301004696D5 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		FA225D3515360301004696D5 /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FA225D3615360301004696D5 /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		FA225D3B15360301004696D5 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FA225D3C15360301004696D5 /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		FA225D3E15360301004696D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		FA225D3F15360301004696D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		FA225D4115360301004696D5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ZKTextField/ZKTextField-Prefix.pch";
+				INFOPLIST_FILE = "ZKTextField/ZKTextField-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		FA225D4215360301004696D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ZKTextField/ZKTextField-Prefix.pch";
+				INFOPLIST_FILE = "ZKTextField/ZKTextField-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FA225D1C15360301004696D5 /* Build configuration list for PBXProject "ZKTextField" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA225D3E15360301004696D5 /* Debug */,
+				FA225D3F15360301004696D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FA225D4015360301004696D5 /* Build configuration list for PBXNativeTarget "ZKTextField" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA225D4115360301004696D5 /* Debug */,
+				FA225D4215360301004696D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FA225D1915360301004696D5 /* Project object */;
+}
