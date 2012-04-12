@@ -596,10 +596,6 @@
 - (void)textDidEndEditing:(NSNotification *)note
 {	
 	[self endEditing];
-
-	if (self.target && [self.target respondsToSelector:self.action])
-		[self.target performSelectorOnMainThread:self.action withObject:self waitUntilDone:YES];
-	
 }
 
 - (void)textDidChange:(NSNotification *)pNotification
@@ -617,7 +613,13 @@
 		[self endEditing];
 		[self.window makeFirstResponder:self.nextKeyView];
 		return YES;
+	} else if (inSelector == @selector(insertNewline:) || inSelector == @selector(insertNewlineIgnoringFieldEditor:)) {
+		if (self.target && [self.target respondsToSelector:self.action])
+			[self.target performSelectorOnMainThread:self.action withObject:self waitUntilDone:YES];
+		
+		return NO;
 	}
+			   
 	return NO;
 }
 
