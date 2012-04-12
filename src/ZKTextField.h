@@ -69,9 +69,10 @@
 // Default implementation uses IBeam. Return nil or [NSCursor arrowCursor] for normal.
 - (NSCursor *)hoverCursor;
 
-// Generate a drawing rectanble for the text.
-// Default implementation gets a vertically centered rectangle with 4px padding
-- (NSRect)textRectForAttributedString:(NSAttributedString *)string;
+// Generate an offset for text
+// Default implementation gets a vertically centered point with 4px padding
+- (NSPoint)textOffsetForHeight:(CGFloat)textHeight;
+- (CGFloat)textWidth;
 
 // Generate a path to clip all drawing with.
 // Default implementation returns the bounds of the receiver with a 4pt corner radius

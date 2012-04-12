@@ -53,6 +53,7 @@
 @property (nonatomic, retain) NSBezierPath *_currentClippingPath;
 @property (nonatomic, retain) NSTextView   *_currentFieldEditor;
 @property (nonatomic, retain) NSClipView   *_currentClipView;
+@property (nonatomic, assign) CGFloat       _lineHeight;
 - (void)_configureFieldEditor;
 @end
 
@@ -66,6 +67,7 @@
 @synthesize _currentClippingPath;
 @synthesize _currentFieldEditor;
 @synthesize _currentClipView;
+@synthesize _lineHeight;
 
 #pragma mark - Public Properties
 @dynamic string;
@@ -129,7 +131,11 @@
 	
 		[hoverCursor setOnMouseEntered:YES];
 		[hoverCursor setOnMouseExited:NO];
-		[self addCursorRect:[self textRectForAttributedString:(self.attributedString.length == 0) ? self.attributedPlaceholderString: self.attributedString] cursor:self.hoverCursor];
+		
+		NSPoint origin = [self textOffsetForHeight:self._lineHeight];
+		NSRect textRect = NSMakeRect(origin.x, origin.y, self.textWidth, self._lineHeight);
+		
+		[self addCursorRect:textRect cursor:self.hoverCursor];
 	}
 	
 }
@@ -177,12 +183,10 @@
 			currentString = mar;
 		}
 		
-		// Getting the rectangle
-		NSRect textRect = [self textRectForAttributedString:currentString];
 		
 		// I hope it's lightweight enough…
 		// Super important that this goes on: Get the baseline offset for the text!
-		NSTextStorage *store = [[NSTextStorage alloc] initWithString:@"HEY HEY HEY" attributes:self.stringAttributes];
+		NSTextStorage *store = [[NSTextStorage alloc] initWithString:@"ZyGhasPpqK" attributes:self.stringAttributes];
 		NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(currentString.size.width, FLT_MAX)];
 		NSLayoutManager *manager = [[NSLayoutManager alloc] init];
 		[manager addTextContainer:container];
@@ -191,6 +195,14 @@
 		[manager setHyphenationFactor:0.0];
 		
 		manager.typesetterBehavior = NSTypesetterLatestBehavior;
+		
+		CGFloat lineHeight = [manager defaultLineHeightForFont:store.font ? store.font : [NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
+		self._lineHeight   = lineHeight;
+		
+		NSRect textRect;
+		textRect.origin      = [self textOffsetForHeight:lineHeight];
+		textRect.size.width  = self.textWidth;
+		textRect.size.height = lineHeight;
 		
 		if (currentString.length > 0) {
 			textRect.origin.y += [manager.typesetter baselineOffsetInLayoutManager:manager glyphIndex:0];
@@ -360,8 +372,14 @@
 	fieldEditor.drawsBackground = NO;	
 	fieldEditor.fieldEditor = YES;
 	fieldEditor.string      = self.string;
-
-	NSRect fieldFrame   = [self textRectForAttributedString:self.attributedString];
+	
+	NSRect fieldFrame;
+	CGFloat lineHeight     = [fieldEditor.layoutManager defaultLineHeightForFont:fieldEditor.font];
+	NSPoint fieldOrigin    = [self textOffsetForHeight:lineHeight];
+	fieldFrame.origin      = fieldOrigin;
+	fieldFrame.size.height = lineHeight;
+	fieldFrame.size.width  = [self textWidth];
+	
 	NSSize layoutSize   = fieldEditor.maxSize;
 	
 	layoutSize.width    = FLT_MAX;
@@ -399,16 +417,6 @@
 		
 	self._currentFieldEditor = fieldEditor;
 	
-	CGFloat lineHeight = [fieldEditor.layoutManager defaultLineHeightForFont:fieldEditor.font];
-	
-#if DEBUG
-	if (fieldFrame.size.height != lineHeight) {
-		NSLog(@"ZKTextField: Text rectangle height or %f differs from line height of its font of %f. Unexpected results my occur.", fieldFrame.size.height, lineHeight);
-	}
-#endif
-	
-	fieldFrame.size.height = lineHeight;
-	
 	self._currentClipView = [[[NSClipView alloc] initWithFrame:fieldFrame] autorelease];
 	self._currentClipView.drawsBackground = NO;
 	self._currentClipView.documentView    = fieldEditor;
@@ -427,10 +435,15 @@
 
 #pragma mark - Layout
 
-- (NSRect)textRectForAttributedString:(NSAttributedString *)string
+- (NSPoint)textOffsetForHeight:(CGFloat)textHeight;
 {
 	// Default text rectangle
-	return NSMakeRect(4.0, round((self.bounds.size.height - 17) / 2), self.bounds.size.width - 8.0, 17.0);
+	return NSMakePoint(4.0, round((self.bounds.size.height - textHeight) / 2));
+}
+
+- (CGFloat)textWidth
+{
+	return self.bounds.size.width - 8.0;
 }
 
 - (NSBezierPath *)clippingPath
@@ -475,8 +488,7 @@
 	[super setFrame:frame];
 	
 	if (self._currentClipView) { // Built in autoresizing sucks so much.
-		NSRect fieldFrame = [self textRectForAttributedString:self.attributedString];
-		[self._currentClipView setFrame:fieldFrame];
+		[self._currentClipView setFrameSize:NSMakeSize(self.textWidth, self._currentClipView.frame.size.height)];
 	}
 }
 
