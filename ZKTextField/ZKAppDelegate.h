@@ -8,7 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface ZKAppDelegate : NSObject <NSApplicationDelegate>
+@interface ZKAppDelegate : NSObject <NSApplicationDelegate> {
+	IBOutlet NSSecureTextField *f;
+}
 
 @property (assign) IBOutlet NSWindow *window;
 

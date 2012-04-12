@@ -13,6 +13,7 @@
 		FA225D3715360301004696D5 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FA225D3515360301004696D5 /* Credits.rtf */; };
 		FA225D3A15360301004696D5 /* ZKAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FA225D3915360301004696D5 /* ZKAppDelegate.m */; };
 		FA225D3D15360301004696D5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA225D3B15360301004696D5 /* MainMenu.xib */; };
+		FA225D4515360339004696D5 /* ZKTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = FA225D4415360339004696D5 /* ZKTextField.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,14 +22,16 @@
 		FA225D2915360301004696D5 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		FA225D2A15360301004696D5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		FA225D2B15360301004696D5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		FA225D2E15360301004696D5 /* ZKTextField-Info.plist */ = {isa = PBXFileReference; path = "ZKTextField-Info.plist"; sourceTree = "<group>"; };
+		FA225D2E15360301004696D5 /* ZKTextField-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ZKTextField-Info.plist"; sourceTree = "<group>"; };
 		FA225D3015360301004696D5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		FA225D3215360301004696D5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		FA225D3415360301004696D5 /* ZKTextField-Prefix.pch */ = {isa = PBXFileReference; path = "ZKTextField-Prefix.pch"; sourceTree = "<group>"; };
+		FA225D3415360301004696D5 /* ZKTextField-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ZKTextField-Prefix.pch"; sourceTree = "<group>"; };
 		FA225D3615360301004696D5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		FA225D3815360301004696D5 /* ZKAppDelegate.h */ = {isa = PBXFileReference; path = ZKAppDelegate.h; sourceTree = "<group>"; };
+		FA225D3815360301004696D5 /* ZKAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZKAppDelegate.h; sourceTree = "<group>"; };
 		FA225D3915360301004696D5 /* ZKAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZKAppDelegate.m; sourceTree = "<group>"; };
 		FA225D3C15360301004696D5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		FA225D4315360339004696D5 /* ZKTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZKTextField.h; path = src/ZKTextField.h; sourceTree = SOURCE_ROOT; };
+		FA225D4415360339004696D5 /* ZKTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZKTextField.m; path = src/ZKTextField.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +87,8 @@
 			children = (
 				FA225D3815360301004696D5 /* ZKAppDelegate.h */,
 				FA225D3915360301004696D5 /* ZKAppDelegate.m */,
+				FA225D4315360339004696D5 /* ZKTextField.h */,
+				FA225D4415360339004696D5 /* ZKTextField.m */,
 				FA225D3B15360301004696D5 /* MainMenu.xib */,
 				FA225D2D15360301004696D5 /* Supporting Files */,
 			);
@@ -169,6 +174,7 @@
 			files = (
 				FA225D3315360301004696D5 /* main.m in Sources */,
 				FA225D3A15360301004696D5 /* ZKAppDelegate.m in Sources */,
+				FA225D4515360339004696D5 /* ZKTextField.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

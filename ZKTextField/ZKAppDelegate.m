@@ -20,6 +20,13 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	// Insert code here to initialize your application
+//	[self.window.contentView addSubview:f];
+	
+//	[self.window makeFirstResponder:f];
+//	NSLog(@"%@", self.window.firstResponder);
+//	NSTextView *h = (NSTextView *)self.window.firstResponder;
+//	NSLog(@"%@", h.layoutManager);
+//	NSLog(@"%@", NSStringFromSize(h.textContainerInset));
 }
 
 @end
