@@ -349,13 +349,13 @@
 	
 	if (_attributedString)
 		[_attributedString release];
-	_attributedString = [attributedString retain];
+	_attributedString = [attributedString copy];
 	
 	[self didChangeValueForKey:@"attributedString"];
 	[self didChangeValueForKey:@"string"];
 	
-	NSAttributedString *heightStr = attributedString;
-	if (!attributedString || attributedString.length == 0)
+	NSAttributedString *heightStr = self.attributedString;
+	if (!self.attributedString || self.attributedString.length == 0)
 		heightStr = [[[NSAttributedString alloc] initWithString:@"ZGyyPh" attributes:self.stringAttributes] autorelease];
 	
 	CTLineRef line = CTLineCreateWithAttributedString((CFAttributedStringRef)heightStr);
@@ -399,14 +399,15 @@
 
 - (void)endEditing
 {
-	if (self._currentFieldEditor) {
-		self.string = self._currentFieldEditor.string;
+	if (self._currentFieldEditor) {		
+		self.attributedString = self._currentFieldEditor.attributedString;
+		
+		[self.window endEditingFor:self];
 		
 		[self._currentClipView removeFromSuperview];
 		self._currentClipView    = nil;
 		self._currentFieldEditor = nil;
 		
-		[self.window makeFirstResponder:nil];
 		[self setNeedsDisplay:YES];
 	}
 }
@@ -417,7 +418,7 @@
 }
 
 - (BOOL)becomeFirstResponder
-{
+{		
 	BOOL success = [super becomeFirstResponder];
 	
 	if (success && !self._currentFieldEditor)
@@ -486,7 +487,8 @@
 	fieldEditor.usesRuler        = NO;
 	fieldEditor.usesInspectorBar = NO;
 	fieldEditor.usesFontPanel    = NO;
-
+	fieldEditor.nextResponder    = self.nextResponder;
+	
 	self._currentFieldEditor = fieldEditor;
 	
 	self._currentClipView = [[[NSClipView alloc] initWithFrame:fieldFrame] autorelease];
@@ -592,7 +594,7 @@
 - (void)textDidEndEditing:(NSNotification *)note
 {	
 	[self endEditing];
-	
+
 	if (self.target && [self.target respondsToSelector:self.action])
 		[self.target performSelectorOnMainThread:self.action withObject:self waitUntilDone:YES];
 	
@@ -600,18 +602,23 @@
 
 - (void)textDidChange:(NSNotification *)pNotification
 {
-	if (self.isContinuous && self.target && [self.target respondsToSelector:self.action])
+	if (self.isContinuous && self.target && [self.target respondsToSelector:self.action]) {
+		self.string = self._currentFieldEditor.string;
+		
 		[self.target performSelectorOnMainThread:self.action withObject:self waitUntilDone:YES];
+	}
 }
 
-- (BOOL)textView:(NSTextView *)aTextView shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString
+- (BOOL)textView:(NSTextView *)inTextView doCommandBySelector:(SEL)inSelector
 {
-	// No newlines
-	if ([replacementString isEqualToString:@"\n"])
-		return NO;
-	
-	return YES;
+	if (inSelector == @selector(insertTab:)) {
+		[self endEditing];
+		[self.window makeFirstResponder:self.nextKeyView];
+		return YES;
+	}
+	return NO;
 }
+
 
 - (NSDictionary *)textView:(NSTextView *)textView shouldChangeTypingAttributes:(NSDictionary *)oldTypingAttributes toAttributes:(NSDictionary *)newTypingAttributes
 {
