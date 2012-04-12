@@ -98,7 +98,7 @@
 		self.backgroundColor   = [NSColor whiteColor];
 		self.drawsBackground   = YES;
 		self.drawsBorder       = YES;
-		self.secure            = YES;
+		self.secure            = NO;
 		self.shouldClipContent = YES;
 		self.shouldShowFocus   = YES;
 		self.string            = @"";
@@ -435,9 +435,7 @@
 	self._currentClipView.documentView    = fieldEditor;
 	
 	fieldEditor.selectedRange             = NSMakeRange(0, fieldEditor.string.length); // select the whole thing
-	
-	NSLog(@"%f", self._lineHeight);
-	
+		
 	if (self.isSecure)
 		fieldEditor.layoutManager.glyphGenerator = [[[ZKSecureGlyphGenerator alloc] init] autorelease]; // Fuck yeah
 //	fieldEditor.layoutManager.typesetterBehavior = NSTypesetterBehavior_10_2_WithCompatibility;
