@@ -87,6 +87,14 @@
 // Default implementation gets a 13pt string which truncates the tail and is a light gray color.
 - (NSDictionary *)placeholderStringAttributes;
 
+// Drawing attributes for when the string is selected.
+// Default implementation does nothing.
+- (NSDictionary *)selectedStringAttributes;
+
+// Color for the insertion point during editing or selection.
+// Default implementation does nothing.
+- (NSColor *)insertionPointColor;
+
 // Used by the drawing methods to get the clipping path without potentially creating a new instance of it
 - (NSBezierPath *)currentClippingPath;
 

@@ -25,6 +25,9 @@
 
 
 // This is used for secure text fields for generating bullets rather than text for display.
+
+#pragma mark - ZKSecureGlyphGenerator
+
 @interface ZKSecureGlyphGenerator : NSGlyphGenerator
 @end
 
@@ -97,6 +100,7 @@
 		self.placeholderString = @"Username";
 		self.editable          = YES;
 		self.selectable        = YES;
+		
     }
     
     return self;
@@ -173,8 +177,32 @@
 			currentString = mar;
 		}
 		
+		// Getting the rectangle
+		NSRect textRect = [self textRectForAttributedString:currentString];
+		
+		
+		// I hope it's lightweight enough…
+		// Super important that this goes on: Get the baseline offset for the text!
+		NSTextStorage *store = [[NSTextStorage alloc] initWithAttributedString:currentString];
+		NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(currentString.size.width, FLT_MAX)];
+		NSLayoutManager *manager = [[NSLayoutManager alloc] init];
+		[manager addTextContainer:container];
+		[store addLayoutManager:manager];
+		[container setLineFragmentPadding:0.0];
+		[manager setHyphenationFactor:0.0];
+		
+		manager.typesetterBehavior = NSTypesetterLatestBehavior;
+		
+		if (currentString.length > 0) {
+			textRect.origin.y += [manager.typesetter baselineOffsetInLayoutManager:manager glyphIndex:0];
+		}
+		[manager release];
+		[store release];
+		[container release];
+		
+		
 		// Draw the text
-		[self drawTextWithRect:dirtyRect andString:currentString];
+		[self drawTextWithRect:textRect andString:currentString];
 	}
 	
 	// Draw focus ring
@@ -191,7 +219,8 @@
 
 - (void)drawBackgroundWithRect:(NSRect)rect
 {
-	[self.backgroundColor drawSwatchInRect:rect];
+	[self.backgroundColor set];
+	NSRectFillUsingOperation(rect, NSCompositeSourceOver);
 }
 
 - (void)drawFrameWithRect:(NSRect)rect
@@ -208,8 +237,8 @@
 }
 
 - (void)drawTextWithRect:(NSRect)rect andString:(NSAttributedString *)string
-{
-	[string drawInRect:[self textRectForAttributedString:string]];
+{	
+	[string drawWithRect:rect options:0];
 }
 
 - (NSDictionary *)stringAttributes
@@ -237,6 +266,16 @@
 - (NSCursor *)hoverCursor
 {
 	return [NSCursor IBeamCursor];
+}
+
+- (NSDictionary *)selectedStringAttributes
+{
+	return nil;
+}
+
+- (NSColor *)insertionPointColor
+{
+	return nil;
 }
 
 #pragma mark - Dynamic Properties
@@ -336,19 +375,29 @@
 	fieldEditor.horizontallyResizable = YES;
 	fieldEditor.verticallyResizable   = NO;
 	
+	NSDictionary *selectedStringAttrs = self.selectedStringAttributes;
+	NSDictionary *stringAttrs         = self.stringAttributes;
+	
 	fieldEditor.textContainer.heightTracksTextView = YES;
 	fieldEditor.textContainer.widthTracksTextView  = NO;
 	fieldEditor.textContainer.containerSize        = layoutSize;
-	fieldEditor.textContainerInset                 = NSMakeSize(0, 1);
+	fieldEditor.textContainerInset                 = NSMakeSize(0, 0);
 	fieldEditor.textContainer.lineFragmentPadding  = 0.0;
-	fieldEditor.typingAttributes                   = self.stringAttributes;
+	
+	if (stringAttrs)
+		fieldEditor.typingAttributes               = stringAttrs;
+	
+	if (selectedStringAttrs)
+		fieldEditor.selectedTextAttributes         = selectedStringAttrs;
+	
+	fieldEditor.insertionPointColor                = self.insertionPointColor;
 	
 	fieldEditor.delegate         = self;
 	fieldEditor.editable         = self.isEditable;
 	fieldEditor.selectable       = self.isSelectable;
 	fieldEditor.usesRuler        = NO;
 	fieldEditor.usesInspectorBar = NO;
-	
+		
 	self._currentFieldEditor = fieldEditor;
 	
 	self._currentClipView = [[[NSClipView alloc] initWithFrame:fieldFrame] autorelease];
@@ -357,9 +406,10 @@
 	
 	fieldEditor.selectedRange             = NSMakeRange(0, fieldEditor.string.length); // select the whole thing
 	[fieldEditor invalidateTextContainerOrigin];
-	
+		
 	if (self.isSecure)
 		fieldEditor.layoutManager.glyphGenerator = [[[ZKSecureGlyphGenerator alloc] init] autorelease]; // Fuck yeah
+	fieldEditor.layoutManager.typesetterBehavior = NSTypesetterBehavior_10_2_WithCompatibility;
 	
 	[self addSubview:self._currentClipView];
 	[self.window makeFirstResponder:fieldEditor];
@@ -372,7 +422,7 @@
 - (NSRect)textRectForAttributedString:(NSAttributedString *)string
 {
 	// Default text rectangle
-	return NSMakeRect(4.0, round(NSMidY(self.bounds) - 17.0 / 2), self.bounds.size.width - 8.0, 17.0);
+	return NSMakeRect(4.0, round((self.bounds.size.height - 17) / 2), self.bounds.size.width - 8.0, 17.0);
 }
 
 - (NSBezierPath *)clippingPath
@@ -390,6 +440,9 @@
 	NSAssert(maxH >= minH || maxH <= 0, @"Maximum height of ZKTextField must be greater than the minimum!");
 	NSAssert(maxW >= minW || maxW <= 0, @"Maximum width of ZKTextField must be greater than the minimum!");
 	
+	CGFloat originalWidth  = frame.size.width;
+	CGFloat originalHeight = frame.size.height;
+	
 	if (frame.size.height < minH && minH > 0)
 		frame.size.height = minH;
 	
@@ -402,12 +455,21 @@
 	else if (frame.size.width > maxW && maxW > 0)
 		frame.size.width = maxW;
 	
+	
+	// Center the frame if we change the sides a bit
+	
+	CGFloat deltaX = originalWidth - frame.size.width;
+	CGFloat deltaY = originalHeight - frame.size.height;
+	
+	frame.origin.x += round(deltaX / 2);
+	frame.origin.y += round(deltaY / 2);
+	
+	[super setFrame:frame];
+	
 	if (self._currentClipView) { // Built in autoresizing sucks so much.
 		NSRect fieldFrame = [self textRectForAttributedString:self.attributedString];
 		[self._currentClipView setFrame:fieldFrame];
 	}
-	
-	[super setFrame:frame];
 }
 
 - (CGFloat)minimumHeight
