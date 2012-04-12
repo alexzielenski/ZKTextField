@@ -90,7 +90,7 @@
 		self.backgroundColor   = [NSColor whiteColor];
 		self.drawsBackground   = YES;
 		self.drawsBorder       = YES;
-		self.secure            = YES;
+		self.secure            = NO;
 		self.shouldClipContent = YES;
 		self.shouldShowFocus   = YES;
 		self.string            = @"";
