@@ -339,7 +339,7 @@
 - (void)beginEditing
 {
 	if (!self._currentFieldEditor)
-		[self _currentFieldEditor];
+		[self _configureFieldEditor];
 }
 
 - (void)endEditing
@@ -542,6 +542,11 @@
 	if ([replacementString isEqualToString:@"\n"])
 		return NO;
 	return YES;
+}
+
+- (NSDictionary *)textView:(NSTextView *)textView shouldChangeTypingAttributes:(NSDictionary *)oldTypingAttributes toAttributes:(NSDictionary *)newTypingAttributes
+{
+	return oldTypingAttributes;
 }
 
 @end
