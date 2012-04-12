@@ -57,6 +57,7 @@
 @property (nonatomic, assign) CGFloat       _offset;
 @property (nonatomic, assign) CGFloat       _lineHeight;
 - (void)_configureFieldEditor;
+- (void)_instantiate;
 @end
 
 #pragma mark - ZKTextField
@@ -89,26 +90,39 @@
 
 #pragma mark - Lifecycle
 
+- (id)init 
+{
+	if ((self = [super init])) {
+		[self _instantiate];
+	}
+	return self;
+}
+
 - (id)initWithFrame:(NSRect)frame
 {
     if (([super initWithFrame:frame])) {		
 		self.frame             = frame; // Recalculate frame
-
-		self.hasHoverCursor    = YES;
-		self.backgroundColor   = [NSColor whiteColor];
-		self.drawsBackground   = YES;
-		self.drawsBorder       = YES;
-		self.secure            = NO;
-		self.shouldClipContent = YES;
-		self.shouldShowFocus   = YES;
-		self.string            = @"";
-		self.placeholderString = @"Username";
-		self.editable          = YES;
-		self.selectable        = YES;
-		
+		[self _instantiate];
     }
     
     return self;
+}
+
+- (id)initWithCoder:(NSCoder *)dec
+{
+	if ((self = [super initWithCoder:dec])) {
+		self.attributedString            = [dec decodeObjectForKey:@"zkattributedstring"];
+		self.backgroundColor             = [dec decodeObjectForKey:@"zkbackgroundcolor"];
+		self.secure                      = [dec decodeBoolForKey:@"zksecure"];
+		self.editable                    = [dec decodeBoolForKey:@"zkeditable"];
+		self.selectable                  = [dec decodeBoolForKey:@"zkselectable"];
+		self.shouldShowFocus             = [dec decodeBoolForKey:@"zkshouldshowfocus"];
+		self.shouldClipContent           = [dec decodeBoolForKey:@"zkshouldclipcontent"];
+		self.drawsBorder                 = [dec decodeBoolForKey:@"zkdrawsborder"];
+		self.attributedPlaceholderString = [dec decodeObjectForKey:@"zkattributedplaceholderstring"];
+		self.drawsBackground             = [dec decodeBoolForKey:@"zkdrawsbackground"];
+	}
+	return self;
 }
 
 - (void)dealloc
@@ -122,6 +136,35 @@
 	self.backgroundColor             = nil;
 	
 	[super dealloc];
+}
+
+- (void)_instantiate
+{
+	self.hasHoverCursor    = YES;
+	self.backgroundColor   = [NSColor whiteColor];
+	self.drawsBackground   = YES;
+	self.drawsBorder       = YES;
+	self.secure            = NO;
+	self.shouldClipContent = YES;
+	self.shouldShowFocus   = YES;
+	self.string            = @"";
+	self.placeholderString = @"Username";
+	self.editable          = YES;
+	self.selectable        = YES;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+	[coder encodeObject:self.attributedPlaceholderString forKey:@"zkattributedplaceholderstring"];
+	[coder encodeObject:self.attributedString forKey:@"zkattributedstring"];
+	[coder encodeObject:self.backgroundColor forKey:@"zkbackgroundcolor"];
+	[coder encodeBool:self.isSecure forKey:@"zksecure"];
+	[coder encodeBool:self.isEditable forKey:@"zkeditable"];
+	[coder encodeBool:self.isSelectable forKey:@"zkselectable"];
+	[coder encodeBool:self.shouldShowFocus forKey:@"zkshouldshowfocus"];
+	[coder encodeBool:self.shouldClipContent forKey:@"zkshouldclipcontent"];
+	[coder encodeBool:self.drawsBorder forKey:@"zkdrawsborder"];
+	[coder encodeBool:self.drawsBackground forKey:@"zkdrawsbackground"];
 }
 
 // For mouse hover stuff

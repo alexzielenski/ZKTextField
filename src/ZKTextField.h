@@ -25,7 +25,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface ZKTextField : NSView
+@interface ZKTextField : NSView <NSCoding>
 
 @property (nonatomic, copy) NSAttributedString *attributedString;
 @property (nonatomic, copy) NSString *string; // Just gets the textAttributes and converts it to an attributed string
