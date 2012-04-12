@@ -499,6 +499,8 @@
 		
 	if (self.isSecure)
 		fieldEditor.layoutManager.glyphGenerator = [[[ZKSecureGlyphGenerator alloc] init] autorelease]; // Fuck yeah
+	else
+		fieldEditor.layoutManager.glyphGenerator = [[[NSGlyphGenerator alloc] init] autorelease];
 //	fieldEditor.layoutManager.typesetterBehavior = NSTypesetterBehavior_10_2_WithCompatibility;
 	
 	if (fieldEditor.string.length > 0)
