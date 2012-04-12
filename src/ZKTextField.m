@@ -37,7 +37,7 @@
 			desiredNumberOfCharacters:(NSUInteger)nChars
 						   glyphIndex:(NSUInteger *)glyphIndex
 					   characterIndex:(NSUInteger *)charIndex {
-		
+	
 	NSFont *font = [glyphStorage.attributedString attribute:NSFontAttributeName atIndex:0 effectiveRange:NULL];
 	NSGlyph newGlyphs[1] = {[font glyphWithName:@"bullet"]};
 	[glyphStorage insertGlyphs:newGlyphs length:1 forStartingGlyphAtIndex:*glyphIndex characterIndex:*charIndex];
@@ -176,7 +176,7 @@
 							 [NSColor controlTextColor], NSForegroundColorAttributeName,
 							 [NSFont systemFontOfSize:13.0f], NSFontAttributeName, 
 							 style, NSParagraphStyleAttributeName, nil];
-
+	
 	
 	
 	self.placeholderStringAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -215,7 +215,7 @@
 	
 	if (self.hasHoverCursor) {
 		NSCursor *hoverCursor = self.hoverCursor;
-	
+		
 		[hoverCursor setOnMouseEntered:YES];
 		[hoverCursor setOnMouseExited:NO];
 		
@@ -241,7 +241,7 @@
 		
 		if (self._currentClippingPath)
 			[self._currentClippingPath addClip];
-	
+		
 	}
 	
 	// Draw background
@@ -357,13 +357,13 @@
 	CTLineRef line = CTLineCreateWithAttributedString((CFAttributedStringRef)heightStr);
 	CGFloat ascent, descent, leading;
 	CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-		
+	
 	CTFramesetterRef frame = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)heightStr);
 	CGSize size = CTFramesetterSuggestFrameSizeWithConstraints(frame, CFRangeMake(0, self.attributedString.length),
 															   NULL, CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX), NULL);
 	self._lineHeight = size.height;
 	self._offset     = round(descent + leading);
-		
+	
 	CFRelease(frame);
 	CFRelease(line);
 	
@@ -408,8 +408,6 @@
 	if (self._currentFieldEditor) {		
 		self.attributedString = self._currentFieldEditor.attributedString;
 		
-		[self.window endEditingFor:self];
-		
 		[self._currentClipView removeFromSuperview];
 		self._currentClipView    = nil;
 		self._currentFieldEditor = nil;
@@ -443,6 +441,9 @@
 
 - (void)_configureFieldEditor
 {
+	
+	[self.window endEditingFor:nil]; // Free the field editor
+	
 	NSTextView *fieldEditor = (NSTextView *)[self.window fieldEditor:YES
 														   forObject:self];
 	
@@ -451,7 +452,7 @@
 	fieldEditor.drawsBackground = NO;	
 	fieldEditor.fieldEditor = YES;
 	fieldEditor.string      = str ? str : @"";
-		
+	
 	NSRect fieldFrame;
 	NSPoint fieldOrigin    = [self textOffsetForHeight:self._lineHeight];
 	fieldFrame.origin      = fieldOrigin;
@@ -502,12 +503,12 @@
 	self._currentClipView.documentView    = fieldEditor;
 	
 	fieldEditor.selectedRange             = NSMakeRange(0, fieldEditor.string.length); // select the whole thing
-		
+	
 	if (self.isSecure)
 		fieldEditor.layoutManager.glyphGenerator = [[[ZKSecureGlyphGenerator alloc] init] autorelease]; // Fuck yeah
 	else
 		fieldEditor.layoutManager.glyphGenerator = [NSGlyphGenerator sharedGlyphGenerator];
-//	fieldEditor.layoutManager.typesetterBehavior = NSTypesetterBehavior_10_2_WithCompatibility;
+	//	fieldEditor.layoutManager.typesetterBehavior = NSTypesetterBehavior_10_2_WithCompatibility;
 	
 	if (fieldEditor.string.length > 0)
 		self._offset = [fieldEditor.layoutManager.typesetter baselineOffsetInLayoutManager:fieldEditor.layoutManager glyphIndex:0];
@@ -626,7 +627,7 @@
 		
 		return NO;
 	}
-			   
+	
 	return NO;
 }
 
