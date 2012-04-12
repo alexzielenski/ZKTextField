@@ -153,7 +153,7 @@
 		
 		if (self.isSecure && (self.attributedString.length > 0)) {
 			NSString *bullets = [@"" stringByPaddingToLength:currentString.length 
-												  withString:[NSString stringWithUTF8String:"•"] 
+												  withString:[NSString stringWithFormat:@"%C", 0x2022] 
 											 startingAtIndex:0];
 			NSMutableAttributedString *mar = [currentString.mutableCopy autorelease];
 			[mar replaceCharactersInRange:NSMakeRange(0, mar.length) withString:bullets];
