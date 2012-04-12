@@ -1,9 +1,9 @@
 //
-//  ZKAppDelegate.h
-//  ZKTextField
+// ZKAppDelegate.h
+// ZKTextField
 //
-//  Created by Alex Zielenski on 4/11/12.
-//  Copyright (c) 2012 Alex Zielenski. All rights reserved.
+// Created by Alex Zielenski on 4/11/12.
+// Copyright (c) 2012 Alex Zielenski. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
