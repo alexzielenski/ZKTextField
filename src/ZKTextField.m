@@ -89,6 +89,7 @@
 @synthesize selectable                  = _selectable;
 @synthesize target                      = _target;
 @synthesize action                      = _action;
+@synthesize continuous                  = _continuous;
 
 #pragma mark - Lifecycle
 
@@ -437,9 +438,12 @@
 {
 	NSTextView *fieldEditor = (NSTextView *)[self.window fieldEditor:YES
 														   forObject:self];
+	
+	NSString *str = self.string;
+	
 	fieldEditor.drawsBackground = NO;	
 	fieldEditor.fieldEditor = YES;
-	fieldEditor.string      = self.string;
+	fieldEditor.string      = str ? str : @"";
 		
 	NSRect fieldFrame;
 	NSPoint fieldOrigin    = [self textOffsetForHeight:self._lineHeight];

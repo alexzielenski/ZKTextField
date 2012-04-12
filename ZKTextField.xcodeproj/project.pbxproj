@@ -14,6 +14,7 @@
 		FA225D3A15360301004696D5 /* ZKAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FA225D3915360301004696D5 /* ZKAppDelegate.m */; };
 		FA225D3D15360301004696D5 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA225D3B15360301004696D5 /* MainMenu.xib */; };
 		FA225D4515360339004696D5 /* ZKTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = FA225D4415360339004696D5 /* ZKTextField.m */; };
+		FA225D7C15369C7B004696D5 /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA225D7B15369C7B004696D5 /* ApplicationServices.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		FA225D3C15360301004696D5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		FA225D4315360339004696D5 /* ZKTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZKTextField.h; path = src/ZKTextField.h; sourceTree = SOURCE_ROOT; };
 		FA225D4415360339004696D5 /* ZKTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ZKTextField.m; path = src/ZKTextField.m; sourceTree = SOURCE_ROOT; };
+		FA225D7B15369C7B004696D5 /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA225D7C15369C7B004696D5 /* ApplicationServices.framework in Frameworks */,
 				FA225D2715360301004696D5 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -49,6 +52,7 @@
 		FA225D1715360301004696D5 = {
 			isa = PBXGroup;
 			children = (
+				FA225D7B15369C7B004696D5 /* ApplicationServices.framework */,
 				FA225D2C15360301004696D5 /* ZKTextField */,
 				FA225D2515360301004696D5 /* Frameworks */,
 				FA225D2315360301004696D5 /* Products */,
@@ -294,6 +298,7 @@
 				FA225D4215360301004696D5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
