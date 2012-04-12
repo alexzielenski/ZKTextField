@@ -311,8 +311,8 @@
 	CGSize size = CTFramesetterSuggestFrameSizeWithConstraints(frame, CFRangeMake(0, self.attributedString.length),
 															   NULL, CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX), NULL);
 	self._lineHeight = size.height;
-	self._offset     = round(descent);
-	
+	self._offset     = round(descent + leading);
+		
 	CFRelease(frame);
 	CFRelease(line);
 }
