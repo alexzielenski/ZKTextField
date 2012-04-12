@@ -35,6 +35,10 @@
 @property (nonatomic, copy) NSAttributedString *attributedPlaceholderString;
 @property (nonatomic, copy) NSString *placeholderString;              // String to use as a placeholder in the absent of actual content
 
+@property (nonatomic, retain) NSDictionary *stringAttributes;
+@property (nonatomic, retain) NSDictionary *placeholderStringAttributes;
+@property (nonatomic, retain) NSDictionary *selectedStringAttributes;
+
 @property (nonatomic, retain) NSColor *backgroundColor;               // A background color to draw
 @property (nonatomic, assign) BOOL drawsBackground;                   // Flag indicating if -drawBackgroundWithRect: is called
 @property (nonatomic, assign) BOOL drawsBorder;                       // Flag indicating if -drawFrameWithRect: is called
@@ -82,18 +86,6 @@
 // Does nothing if -shouldClipContent is NO
 // Return nil for none.
 - (NSBezierPath *)clippingPath;
-
-// Drawing attribute for the main string.
-// Default implementation gets a 13pt string which truncates the tail and is the normal control color.
-- (NSDictionary *)stringAttributes;
-
-// Drawing attributes for a placeholder string.
-// Default implementation gets a 13pt string which truncates the tail and is a light gray color.
-- (NSDictionary *)placeholderStringAttributes;
-
-// Drawing attributes for when the string is selected.
-// Default implementation does nothing.
-- (NSDictionary *)selectedStringAttributes;
 
 // Color for the insertion point during editing or selection.
 // Default implementation does nothing.

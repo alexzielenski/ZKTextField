@@ -56,6 +56,8 @@
 @property (nonatomic, retain) NSClipView   *_currentClipView;
 @property (nonatomic, assign) CGFloat       _offset;
 @property (nonatomic, assign) CGFloat       _lineHeight;
+@property (nonatomic, retain) NSAttributedString *_bullets;
+
 - (void)_configureFieldEditor;
 - (void)_instantiate;
 @end
@@ -72,8 +74,10 @@
 @synthesize _currentClipView;
 @synthesize _lineHeight;
 @synthesize _offset;
+@synthesize _bullets;
 
 #pragma mark - Public Properties
+
 @dynamic string;
 @dynamic placeholderString;
 @synthesize attributedString            = _attributedString;
@@ -90,6 +94,9 @@
 @synthesize target                      = _target;
 @synthesize action                      = _action;
 @synthesize continuous                  = _continuous;
+@synthesize stringAttributes            = _stringAttributes;
+@synthesize placeholderStringAttributes = _placeholderStringAttributes;
+@synthesize selectedStringAttributes    = _selectedStringAttributes;
 
 #pragma mark - Lifecycle
 
@@ -127,6 +134,9 @@
 		self.target                      = [dec decodeObjectForKey:@"zktarget"];
 		self.action                      = NSSelectorFromString([dec decodeObjectForKey:@"zkaction"]);
 		self.continuous                  = [dec decodeBoolForKey:@"zkcontinuous"];
+		self.placeholderStringAttributes = [dec decodeObjectForKey:@"zkplaceholderstringattributes"];
+		self.stringAttributes            = [dec decodeObjectForKey:@"zkstringattributes"];
+		self.selectedStringAttributes    = [dec decodeObjectForKey:@"zkselectedstringattributes"];
 	}
 	return self;
 }
@@ -136,11 +146,14 @@
 	[self endEditing];
 	[self discardCursorRects];
 	
+	self._bullets                    = nil;
 	self._currentClippingPath        = nil;
 	self.attributedString            = nil;
 	self.attributedPlaceholderString = nil;
 	self.backgroundColor             = nil;
-	
+	self.stringAttributes            = nil;
+	self.placeholderStringAttributes = nil;
+	self.selectedStringAttributes    = nil;
 	[super dealloc];
 }
 
@@ -157,6 +170,19 @@
 	self.placeholderString = @"Username";
 	self.editable          = YES;
 	self.selectable        = YES;
+	NSMutableParagraphStyle *style = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
+	style.lineBreakMode = NSLineBreakByTruncatingTail;
+	self.stringAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+							 [NSColor controlTextColor], NSForegroundColorAttributeName,
+							 [NSFont systemFontOfSize:13.0f], NSFontAttributeName, 
+							 style, NSParagraphStyleAttributeName, nil];
+
+	
+	
+	self.placeholderStringAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+										[NSColor grayColor], NSForegroundColorAttributeName,
+										[NSFont systemFontOfSize:13.0f], NSFontAttributeName, 
+										style, NSParagraphStyleAttributeName, nil];
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder
@@ -172,6 +198,9 @@
 	[coder encodeBool:self.drawsBorder forKey:@"zkdrawsborder"];
 	[coder encodeBool:self.drawsBackground forKey:@"zkdrawsbackground"];
 	[coder encodeBool:self.isContinuous forKey:@"zkcontinuous"];
+	[coder encodeObject:self.placeholderStringAttributes forKey:@"zkplaceholderstringattributes"];
+	[coder encodeObject:self.stringAttributes forKey:@"zkstringattributes"];
+	[coder encodeObject:self.selectedStringAttributes forKey:@"zkselectedStringAttributes"];
 	
 	if ([self.target conformsToProtocol:@protocol(NSCoding)]) {
 		[coder encodeObject:NSStringFromSelector(self.action) forKey:@"zkaction"];
@@ -230,16 +259,8 @@
 	if (!self._currentFieldEditor) {
 		NSAttributedString *currentString = (self.attributedString.length > 0) ? self.attributedString : self.attributedPlaceholderString;
 		
-		// If we are secure and there is actual non-placeholder content, replace it with bullets
-		if (self.isSecure && (self.attributedString.length > 0)) {
-			NSString *bullets = [@"" stringByPaddingToLength:currentString.length 
-												  withString:[NSString stringWithFormat:@"%C", 0x2022]  // 0x2022 is the code for a bullet
-											 startingAtIndex:0];
-			
-			NSMutableAttributedString *mar = [currentString.mutableCopy autorelease];
-			[mar replaceCharactersInRange:NSMakeRange(0, mar.length) withString:bullets];
-			currentString = mar;
-		}
+		if (self.isSecure && self.attributedString.length > 0)
+			currentString = self._bullets;
 		
 		NSRect textRect;
 		textRect.origin      = [self textOffsetForHeight:self._lineHeight];
@@ -288,37 +309,12 @@
 	[string drawWithRect:rect options:0];
 }
 
-- (NSDictionary *)stringAttributes
-{
-	NSMutableParagraphStyle *style = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-	style.lineBreakMode = NSLineBreakByTruncatingTail;
-	
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSColor controlTextColor], NSForegroundColorAttributeName,
-			[NSFont systemFontOfSize:13.0f], NSFontAttributeName, 
-			style, NSParagraphStyleAttributeName, nil];
-}
-
-- (NSDictionary *)placeholderStringAttributes
-{
-	NSMutableParagraphStyle *style = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
-	style.lineBreakMode = NSLineBreakByTruncatingTail;
-	
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSColor grayColor], NSForegroundColorAttributeName,
-			[NSFont systemFontOfSize:13.0f], NSFontAttributeName, 
-			style, NSParagraphStyleAttributeName, nil];
-}
 
 - (NSCursor *)hoverCursor
 {
 	return [NSCursor IBeamCursor];
 }
 
-- (NSDictionary *)selectedStringAttributes
-{
-	return nil;
-}
 
 - (NSColor *)insertionPointColor
 {
@@ -370,6 +366,16 @@
 		
 	CFRelease(frame);
 	CFRelease(line);
+	
+	
+	// Generate a secure string
+	NSString *bullets = [@"" stringByPaddingToLength:self.attributedString.length 
+										  withString:[NSString stringWithFormat:@"%C", 0x2022]  // 0x2022 is the code for a bullet
+									 startingAtIndex:0];
+	
+	NSMutableAttributedString *mar = [self.attributedString.mutableCopy autorelease];
+	[mar replaceCharactersInRange:NSMakeRange(0, mar.length) withString:bullets];
+	self._bullets = mar;
 }
 
 - (NSString *)placeholderString
