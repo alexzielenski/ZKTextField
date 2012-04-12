@@ -38,14 +38,15 @@
 						   glyphIndex:(NSUInteger *)glyphIndex
 					   characterIndex:(NSUInteger *)charIndex {
 		
-	NSUInteger bullet = 0x87;
-	NSGlyph newGlyphs[1] = {bullet};
+	NSFont *font = [glyphStorage.attributedString attribute:NSFontAttributeName atIndex:0 effectiveRange:NULL];
+	NSGlyph newGlyphs[1] = {[font glyphWithName:@"bullet"]};
 	[glyphStorage insertGlyphs:newGlyphs length:1 forStartingGlyphAtIndex:*glyphIndex characterIndex:*charIndex];
 }
 
 @end
 
 #import "ZKTextField.h"
+#import <ApplicationServices/ApplicationServices.h>
 
 #pragma mark - Private Class Extension
 
@@ -53,6 +54,7 @@
 @property (nonatomic, retain) NSBezierPath *_currentClippingPath;
 @property (nonatomic, retain) NSTextView   *_currentFieldEditor;
 @property (nonatomic, retain) NSClipView   *_currentClipView;
+@property (nonatomic, assign) CGFloat       _offset;
 @property (nonatomic, assign) CGFloat       _lineHeight;
 - (void)_configureFieldEditor;
 @end
@@ -68,6 +70,7 @@
 @synthesize _currentFieldEditor;
 @synthesize _currentClipView;
 @synthesize _lineHeight;
+@synthesize _offset;
 
 #pragma mark - Public Properties
 @dynamic string;
@@ -88,14 +91,14 @@
 
 - (id)initWithFrame:(NSRect)frame
 {
-    if (([super initWithFrame:frame])) {
+    if (([super initWithFrame:frame])) {		
 		self.frame             = frame; // Recalculate frame
 
 		self.hasHoverCursor    = YES;
 		self.backgroundColor   = [NSColor whiteColor];
 		self.drawsBackground   = YES;
 		self.drawsBorder       = YES;
-		self.secure            = NO;
+		self.secure            = YES;
 		self.shouldClipContent = YES;
 		self.shouldShowFocus   = YES;
 		self.string            = @"";
@@ -183,34 +186,12 @@
 			currentString = mar;
 		}
 		
-		
-		// I hope it's lightweight enough…
-		// Super important that this goes on: Get the baseline offset for the text!
-		NSTextStorage *store = [[NSTextStorage alloc] initWithString:@"ZyGhasPpqK" attributes:self.stringAttributes];
-		NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(currentString.size.width, FLT_MAX)];
-		NSLayoutManager *manager = [[NSLayoutManager alloc] init];
-		[manager addTextContainer:container];
-		[store addLayoutManager:manager];
-		[container setLineFragmentPadding:0.0];
-		[manager setHyphenationFactor:0.0];
-		
-		manager.typesetterBehavior = NSTypesetterLatestBehavior;
-		
-		CGFloat lineHeight = [manager defaultLineHeightForFont:store.font ? store.font : [NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
-		self._lineHeight   = lineHeight;
-		
 		NSRect textRect;
-		textRect.origin      = [self textOffsetForHeight:lineHeight];
+		textRect.origin      = [self textOffsetForHeight:self._lineHeight];
 		textRect.size.width  = self.textWidth;
-		textRect.size.height = lineHeight;
+		textRect.size.height = self._lineHeight;
 		
-		if (currentString.length > 0) {
-			textRect.origin.y += [manager.typesetter baselineOffsetInLayoutManager:manager glyphIndex:0];
-		}
-		[manager release];
-		[store release];
-		[container release];
-		
+		textRect.origin.y += self._offset;
 		
 		// Draw the text
 		[self drawTextWithRect:textRect andString:currentString];
@@ -298,9 +279,42 @@
 
 - (void)setString:(NSString *)string
 {
-	[self willChangeValueForKey:@"string"];
 	[self setAttributedString:[[[NSAttributedString alloc] initWithString:string attributes:self.stringAttributes] autorelease]];
+}
+
+- (NSAttributedString *)attributedString
+{
+	return _attributedString;
+}
+
+- (void)setAttributedString:(NSAttributedString *)attributedString
+{
+	[self willChangeValueForKey:@"string"];
+	[self willChangeValueForKey:@"attributedString"];
+	
+	if (_attributedString)
+		[_attributedString release];
+	_attributedString = [attributedString retain];
+	
+	[self didChangeValueForKey:@"attributedString"];
 	[self didChangeValueForKey:@"string"];
+	
+	NSAttributedString *heightStr = attributedString;
+	if (!attributedString || attributedString.length == 0)
+		heightStr = [[[NSAttributedString alloc] initWithString:@"ZGyyPh" attributes:self.stringAttributes] autorelease];
+	
+	CTLineRef line = CTLineCreateWithAttributedString((CFAttributedStringRef)heightStr);
+	CGFloat ascent, descent, leading;
+	CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+		
+	CTFramesetterRef frame = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)heightStr);
+	CGSize size = CTFramesetterSuggestFrameSizeWithConstraints(frame, CFRangeMake(0, self.attributedString.length),
+															   NULL, CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX), NULL);
+	self._lineHeight = size.height;
+	self._offset     = round(descent);
+	
+	CFRelease(frame);
+	CFRelease(line);
 }
 
 - (NSString *)placeholderString
@@ -372,12 +386,11 @@
 	fieldEditor.drawsBackground = NO;	
 	fieldEditor.fieldEditor = YES;
 	fieldEditor.string      = self.string;
-	
+		
 	NSRect fieldFrame;
-	CGFloat lineHeight     = [fieldEditor.layoutManager defaultLineHeightForFont:fieldEditor.font];
-	NSPoint fieldOrigin    = [self textOffsetForHeight:lineHeight];
+	NSPoint fieldOrigin    = [self textOffsetForHeight:self._lineHeight];
 	fieldFrame.origin      = fieldOrigin;
-	fieldFrame.size.height = lineHeight;
+	fieldFrame.size.height = self._lineHeight;
 	fieldFrame.size.width  = [self textWidth];
 	
 	NSSize layoutSize   = fieldEditor.maxSize;
@@ -414,7 +427,7 @@
 	fieldEditor.selectable       = self.isSelectable;
 	fieldEditor.usesRuler        = NO;
 	fieldEditor.usesInspectorBar = NO;
-		
+	
 	self._currentFieldEditor = fieldEditor;
 	
 	self._currentClipView = [[[NSClipView alloc] initWithFrame:fieldFrame] autorelease];
@@ -422,10 +435,15 @@
 	self._currentClipView.documentView    = fieldEditor;
 	
 	fieldEditor.selectedRange             = NSMakeRange(0, fieldEditor.string.length); // select the whole thing
-	[fieldEditor invalidateTextContainerOrigin];
-		
+	
+	NSLog(@"%f", self._lineHeight);
+	
 	if (self.isSecure)
 		fieldEditor.layoutManager.glyphGenerator = [[[ZKSecureGlyphGenerator alloc] init] autorelease]; // Fuck yeah
+//	fieldEditor.layoutManager.typesetterBehavior = NSTypesetterBehavior_10_2_WithCompatibility;
+	
+	if (fieldEditor.string.length > 0)
+		self._offset = [fieldEditor.layoutManager.typesetter baselineOffsetInLayoutManager:fieldEditor.layoutManager glyphIndex:0];
 	
 	[self addSubview:self._currentClipView];
 	[self.window makeFirstResponder:fieldEditor];
