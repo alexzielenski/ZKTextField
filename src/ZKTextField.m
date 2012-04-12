@@ -45,12 +45,16 @@
 #import "ZKTextField.h"
 
 #pragma mark - Private Class Extension
+
 @interface ZKTextField () <NSTextViewDelegate, NSTextDelegate>
 @property (nonatomic, retain) NSBezierPath *_currentClippingPath;
 @property (nonatomic, retain) NSTextView   *_currentFieldEditor;
 @property (nonatomic, retain) NSClipView   *_currentClipView;
 - (void)_configureFieldEditor;
 @end
+
+#pragma mark - ZKTextField
+#pragma mark -
 
 @implementation ZKTextField
 
@@ -90,7 +94,7 @@
 		self.shouldClipContent = YES;
 		self.shouldShowFocus   = YES;
 		self.string            = @"";
-		self.placeholderString = @"E-mail";
+		self.placeholderString = @"Username";
 		self.editable          = YES;
 		self.selectable        = YES;
     }
@@ -111,6 +115,7 @@
 	[super dealloc];
 }
 
+// For mouse hover stuff
 - (void)resetCursorRects
 {
 	[self discardCursorRects];
@@ -133,6 +138,7 @@
 	
 	[NSGraphicsContext saveGraphicsState];
 	
+	// Clip the context
 	if (self.shouldClipContent) {
 		self._currentClippingPath = self.clippingPath;
 		
@@ -141,34 +147,43 @@
 	
 	}
 	
+	// Draw background
 	if (self.drawsBackground)
 		[self drawBackgroundWithRect:dirtyRect];
+	
+	// Draw frame
 	if (self.drawsBorder)
 		[self drawFrameWithRect:dirtyRect];
 	
+	// Draw interios
 	[self drawInteriorWithRect:dirtyRect];
 	
+	// If we don't have an active edit session, draw the text ourselves.
 	if (!self._currentFieldEditor) {
 		NSAttributedString *currentString = (self.attributedString.length > 0) ? self.attributedString : self.attributedPlaceholderString;
 		
+		// If we are secure and there is actual non-placeholder content, replace it with bullets
 		if (self.isSecure && (self.attributedString.length > 0)) {
 			NSString *bullets = [@"" stringByPaddingToLength:currentString.length 
-												  withString:[NSString stringWithFormat:@"%C", 0x2022] 
+												  withString:[NSString stringWithFormat:@"%C", 0x2022]  // 0x2022 is the code for a bullet
 											 startingAtIndex:0];
+			
 			NSMutableAttributedString *mar = [currentString.mutableCopy autorelease];
 			[mar replaceCharactersInRange:NSMakeRange(0, mar.length) withString:bullets];
 			currentString = mar;
 		}
 		
+		// Draw the text
 		[self drawTextWithRect:dirtyRect andString:currentString];
 	}
 	
+	// Draw focus ring
 	if (self._currentFieldEditor && self.shouldShowFocus) {
 		NSSetFocusRingStyle(NSFocusRingOnly);
 		[self._currentClippingPath ? self._currentClippingPath : [NSBezierPath bezierPathWithRect:self.bounds] fill];
 	}
 	
-	// Release it when done
+	// Release the clipping path when done
 	self._currentClippingPath = nil;
 	
 	[NSGraphicsContext restoreGraphicsState];
@@ -181,6 +196,7 @@
 
 - (void)drawFrameWithRect:(NSRect)rect
 {
+	// You need a line width double of what your inner stroke needs to be while clipping
 	[[NSColor grayColor] setStroke];
 	[self._currentClippingPath setLineWidth:2.0];
 	[self._currentClippingPath stroke];
@@ -194,16 +210,6 @@
 - (void)drawTextWithRect:(NSRect)rect andString:(NSAttributedString *)string
 {
 	[string drawInRect:[self textRectForAttributedString:string]];
-}
-
-- (NSRect)textRectForAttributedString:(NSAttributedString *)string
-{
-	return NSMakeRect(4.0, round(NSMidY(self.bounds) - 17.0 / 2), self.bounds.size.width - 8.0, 17.0);
-}
-
-- (NSBezierPath *)clippingPath
-{
-	return [NSBezierPath bezierPathWithRoundedRect:self.bounds xRadius:4.0 yRadius:4.0];
 }
 
 - (NSDictionary *)stringAttributes
@@ -363,6 +369,17 @@
 
 #pragma mark - Layout
 
+- (NSRect)textRectForAttributedString:(NSAttributedString *)string
+{
+	// Default text rectangle
+	return NSMakeRect(4.0, round(NSMidY(self.bounds) - 17.0 / 2), self.bounds.size.width - 8.0, 17.0);
+}
+
+- (NSBezierPath *)clippingPath
+{
+	return [NSBezierPath bezierPathWithRoundedRect:self.bounds xRadius:4.0 yRadius:4.0];
+}
+
 - (void)setFrame:(NSRect)frame
 {
 	CGFloat minH = self.minimumHeight;
@@ -415,11 +432,6 @@
 
 #pragma mark - NSTextViewDelegate
 
-- (void)textDidChange:(NSNotification *)note
-{	
-	
-}
-
 - (void)textDidEndEditing:(NSNotification *)note
 {	
 	[self endEditing];
@@ -427,6 +439,7 @@
 
 - (BOOL)textView:(NSTextView *)aTextView shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString
 {
+	// No newlines
 	if ([replacementString isEqualToString:@"\n"])
 		return NO;
 	return YES;
