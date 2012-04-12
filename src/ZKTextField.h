@@ -26,6 +26,8 @@
 #import <Cocoa/Cocoa.h>
 
 @interface ZKTextField : NSView <NSCoding>
+@property (nonatomic, assign) id target;
+@property (nonatomic, assign) SEL action;
 
 @property (nonatomic, copy) NSAttributedString *attributedString;
 @property (nonatomic, copy) NSString *string; // Just gets the textAttributes and converts it to an attributed string
@@ -42,6 +44,7 @@
 @property (nonatomic, assign, getter = isEditable) BOOL editable;     // Denotes if the field is editable
 @property (nonatomic, assign, getter = isSelectable) BOOL selectable; // Denotes if the field is selectable
 @property (nonatomic, assign, getter = isSecure) BOOL secure;         // Draw bullets instead of text
+@property (nonatomic, assign, getter = isContinuous) BOOL continuous; // Action is sent every time text changes
 
 // Initiates Editing of the Text Field
 - (void)beginEditing;

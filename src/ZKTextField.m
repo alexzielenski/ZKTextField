@@ -87,6 +87,8 @@
 @synthesize shouldShowFocus             = _shouldShowFocus;
 @synthesize editable                    = _editable;
 @synthesize selectable                  = _selectable;
+@synthesize target                      = _target;
+@synthesize action                      = _action;
 
 #pragma mark - Lifecycle
 
@@ -121,6 +123,9 @@
 		self.drawsBorder                 = [dec decodeBoolForKey:@"zkdrawsborder"];
 		self.attributedPlaceholderString = [dec decodeObjectForKey:@"zkattributedplaceholderstring"];
 		self.drawsBackground             = [dec decodeBoolForKey:@"zkdrawsbackground"];
+		self.target                      = [dec decodeObjectForKey:@"zktarget"];
+		self.action                      = NSSelectorFromString([dec decodeObjectForKey:@"zkaction"]);
+		self.continuous                  = [dec decodeBoolForKey:@"zkcontinuous"];
 	}
 	return self;
 }
@@ -165,6 +170,12 @@
 	[coder encodeBool:self.shouldClipContent forKey:@"zkshouldclipcontent"];
 	[coder encodeBool:self.drawsBorder forKey:@"zkdrawsborder"];
 	[coder encodeBool:self.drawsBackground forKey:@"zkdrawsbackground"];
+	[coder encodeBool:self.isContinuous forKey:@"zkcontinuous"];
+	
+	if ([self.target conformsToProtocol:@protocol(NSCoding)]) {
+		[coder encodeObject:NSStringFromSelector(self.action) forKey:@"zkaction"];
+		[coder encodeObject:self.target forKey:@"zktarget"];
+	}
 }
 
 // For mouse hover stuff
@@ -471,7 +482,7 @@
 	fieldEditor.usesRuler        = NO;
 	fieldEditor.usesInspectorBar = NO;
 	fieldEditor.usesFontPanel    = NO;
-	
+
 	self._currentFieldEditor = fieldEditor;
 	
 	self._currentClipView = [[[NSClipView alloc] initWithFrame:fieldFrame] autorelease];
@@ -577,6 +588,16 @@
 - (void)textDidEndEditing:(NSNotification *)note
 {	
 	[self endEditing];
+	
+	if (self.target && [self.target respondsToSelector:self.action])
+		[self.target performSelectorOnMainThread:self.action withObject:self waitUntilDone:YES];
+	
+}
+
+- (void)textDidChange:(NSNotification *)pNotification
+{
+	if (self.isContinuous && self.target && [self.target respondsToSelector:self.action])
+		[self.target performSelectorOnMainThread:self.action withObject:self waitUntilDone:YES];
 }
 
 - (BOOL)textView:(NSTextView *)aTextView shouldChangeTextInRange:(NSRange)affectedCharRange replacementString:(NSString *)replacementString
@@ -584,6 +605,7 @@
 	// No newlines
 	if ([replacementString isEqualToString:@"\n"])
 		return NO;
+	
 	return YES;
 }
 
