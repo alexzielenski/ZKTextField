@@ -180,10 +180,9 @@
 		// Getting the rectangle
 		NSRect textRect = [self textRectForAttributedString:currentString];
 		
-		
 		// I hope it's lightweight enough…
 		// Super important that this goes on: Get the baseline offset for the text!
-		NSTextStorage *store = [[NSTextStorage alloc] initWithAttributedString:currentString];
+		NSTextStorage *store = [[NSTextStorage alloc] initWithString:@"HEY HEY HEY" attributes:self.stringAttributes];
 		NSTextContainer *container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(currentString.size.width, FLT_MAX)];
 		NSLayoutManager *manager = [[NSLayoutManager alloc] init];
 		[manager addTextContainer:container];
@@ -195,6 +194,7 @@
 		
 		if (currentString.length > 0) {
 			textRect.origin.y += [manager.typesetter baselineOffsetInLayoutManager:manager glyphIndex:0];
+//			textRect.origin.y += [manager defaultLineHeightForFont:store.font] - textRect.size.height;
 		}
 		[manager release];
 		[store release];
@@ -400,6 +400,16 @@
 		
 	self._currentFieldEditor = fieldEditor;
 	
+	CGFloat lineHeight = [fieldEditor.layoutManager defaultLineHeightForFont:fieldEditor.font];
+	
+#if DEBUG
+	if (fieldFrame.size.height != lineHeight) {
+		NSLog(@"ZKTextField: Text rectangle height or %f differs from line height of its font of %f. Unexpected results my occur.", fieldFrame.size.height, lineHeight);
+	}
+#endif
+	
+	fieldFrame.size.height = lineHeight;
+	
 	self._currentClipView = [[[NSClipView alloc] initWithFrame:fieldFrame] autorelease];
 	self._currentClipView.drawsBackground = NO;
 	self._currentClipView.documentView    = fieldEditor;
@@ -409,7 +419,6 @@
 		
 	if (self.isSecure)
 		fieldEditor.layoutManager.glyphGenerator = [[[ZKSecureGlyphGenerator alloc] init] autorelease]; // Fuck yeah
-	fieldEditor.layoutManager.typesetterBehavior = NSTypesetterBehavior_10_2_WithCompatibility;
 	
 	[self addSubview:self._currentClipView];
 	[self.window makeFirstResponder:fieldEditor];
