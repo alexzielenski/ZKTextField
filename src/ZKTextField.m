@@ -614,6 +614,7 @@
 		[self.window makeFirstResponder:self.nextKeyView];
 		return YES;
 	} else if (inSelector == @selector(insertNewline:) || inSelector == @selector(insertNewlineIgnoringFieldEditor:)) {
+		self.attributedString = inTextView.attributedString;
 		if (self.target && [self.target respondsToSelector:self.action])
 			[self.target performSelectorOnMainThread:self.action withObject:self waitUntilDone:YES];
 		
