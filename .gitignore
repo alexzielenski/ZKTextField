@@ -39,10 +39,6 @@ Backup[ ]of[ ]*.pages/
 Backup[ ]of[ ]*.key/
 Backup[ ]of[ ]*.numbers/
 
-Equili.xcodeproj/project.xcworkspace/xcuserdata/Alex.xcuserdatad/UserInterfaceState.xcuserstate
-Equili.xcodeproj/xcuserdata/Alex.xcuserdatad/xcschemes/EQKit.xcscheme
-Equili.xcodeproj/xcuserdata/Alex.xcuserdatad/xcschemes/Equili.xcscheme
-Equili.xcodeproj/xcuserdata/Alex.xcuserdatad/xcschemes/EQAPIDebugger.xcscheme
-Equili.xcodeproj/xcuserdata/Alex.xcuserdatad/xcschemes/EQControls.xcscheme
-Equili.xcodeproj/xcuserdata/Alex.xcuserdatad/xcschemes/EQKit.xcscheme
-Equili.xcodeproj/xcuserdata/Alex.xcuserdatad/xcschemes/EquiliHelper.xcscheme
+ZKTextField.xcodeproj/project.xcworkspace/xcuserdata/Alex.xcuserdatad/UserInterfaceState.xcuserstate
+ZKTextField.xcodeproj/xcuserdata/Alex.xcuserdatad/xcschemes/xcschememanagement.plist
+ZKTextField.xcodeproj/xcuserdata/Alex.xcuserdatad/xcschemes/ZKTextField.xcscheme
