@@ -345,7 +345,7 @@
 - (void)endEditing
 {
 	if (self._currentFieldEditor) {
-		self.string = self._currentFieldEditor.string;
+		self.attributedString = self._currentFieldEditor.attributedString;
 		
 		[self._currentClipView removeFromSuperview];
 		self._currentClipView    = nil;
@@ -427,6 +427,7 @@
 	fieldEditor.selectable       = self.isSelectable;
 	fieldEditor.usesRuler        = NO;
 	fieldEditor.usesInspectorBar = NO;
+	fieldEditor.usesFontPanel    = NO;
 	
 	self._currentFieldEditor = fieldEditor;
 	
