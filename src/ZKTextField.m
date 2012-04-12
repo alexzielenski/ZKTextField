@@ -408,6 +408,8 @@
 	if (self._currentFieldEditor) {		
 		self.attributedString = self._currentFieldEditor.attributedString;
 		
+		[self.window endEditingFor:self];
+		
 		[self._currentClipView removeFromSuperview];
 		self._currentClipView    = nil;
 		self._currentFieldEditor = nil;
@@ -441,8 +443,8 @@
 
 - (void)_configureFieldEditor
 {
-	
-	[self.window endEditingFor:nil]; // Free the field editor
+	if (![self.window makeFirstResponder:self.window])
+		[self.window endEditingFor:nil]; // Free the field editor
 	
 	NSTextView *fieldEditor = (NSTextView *)[self.window fieldEditor:YES
 														   forObject:self];
