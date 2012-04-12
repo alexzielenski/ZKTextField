@@ -194,7 +194,6 @@
 		
 		if (currentString.length > 0) {
 			textRect.origin.y += [manager.typesetter baselineOffsetInLayoutManager:manager glyphIndex:0];
-//			textRect.origin.y += [manager defaultLineHeightForFont:store.font] - textRect.size.height;
 		}
 		[manager release];
 		[store release];
