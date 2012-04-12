@@ -101,7 +101,7 @@
 		NSCursor *hoverCursor = self.hoverCursor;
 	
 		[hoverCursor setOnMouseEntered:YES];
-		[hoverCursor setOnMouseEntered:NO];
+		[hoverCursor setOnMouseExited:NO];
 		[self addCursorRect:[self textRectForAttributedString:(self.attributedString.length == 0) ? self.attributedPlaceholderString: self.attributedString] cursor:self.hoverCursor];
 	}
 	
@@ -134,7 +134,7 @@
 		[self drawTextWithRect:dirtyRect andString:(self.attributedString && self.attributedString.length > 0) ? self.attributedString : self.attributedPlaceholderString];
 
 	if (self._currentFieldEditor && self.shouldShowFocus) {
-		NSSetFocusRingStyle (NSFocusRingOnly);
+		NSSetFocusRingStyle(NSFocusRingOnly);
 		[self._currentClippingPath ? self._currentClippingPath : [NSBezierPath bezierPathWithRect:self.bounds] fill];
 	}
 	
