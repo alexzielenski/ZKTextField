@@ -624,10 +624,4 @@
 	return NO;
 }
 
-
-- (NSDictionary *)textView:(NSTextView *)textView shouldChangeTypingAttributes:(NSDictionary *)oldTypingAttributes toAttributes:(NSDictionary *)newTypingAttributes
-{
-	return oldTypingAttributes;
-}
-
 @end
