@@ -411,6 +411,8 @@
 		[self.window endEditingFor:self];
 		
 		[self._currentClipView removeFromSuperview];
+		self._currentFieldEditor.layoutManager.glyphGenerator = [NSGlyphGenerator sharedGlyphGenerator];
+		
 		self._currentClipView    = nil;
 		self._currentFieldEditor = nil;
 		
